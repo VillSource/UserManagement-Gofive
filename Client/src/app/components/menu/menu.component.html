@@ -4,7 +4,7 @@
       [routerLink]="linkTo"
       class="flex gap-3"
     >
-      <i class="flex-none material-symbols-outlined">{{ icon }}</i>
+      <i class="flex-none material-symbols-outlined">{{ icon || 'info' }}</i>
       <span> {{ name }} </span>
     </a>
   </div>

@@ -1,8 +1,6 @@
 import { Component, Input, input } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
-type ICON = 'info' | 'keyboard_command_key';
-
 @Component({
   selector: 'app-menu',
   standalone: true,
@@ -12,7 +10,7 @@ type ICON = 'info' | 'keyboard_command_key';
 })
 export class MenuComponent {
   @Input()
-  icon: string | ICON = 'info';
+  icon: string | undefined = 'info';
 
   @Input({ required: true })
   name!: string;

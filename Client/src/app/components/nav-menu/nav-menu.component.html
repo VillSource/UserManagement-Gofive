@@ -1,0 +1,14 @@
+<div class="w-[200px] py-10">
+  <p class="text-2xl w-full text-center">LOGO</p>
+
+  <div *ngFor="let item of navMenuItems" class="pt-6">
+    {{ item.listName }}
+    <div *ngFor="let menu of item.menu">
+      <app-menu
+        [name]="menu.name"
+        [linkTo]="menu.linkTo"
+        [icon]="menu.icon"
+      ></app-menu>
+    </div>
+  </div>
+</div>
