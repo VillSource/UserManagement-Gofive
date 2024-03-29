@@ -11,5 +11,5 @@ public class User
     public string Username { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
 
-    public ICollection<UserPermission> Permissions { get; set; } = [];
+    public ICollection<UserPermission>? Permissions { get; set; }
 }

@@ -11,5 +11,5 @@ public class Permission
     [Required]
     public string PermissionName { get; set; } = string.Empty;
 
-    public ICollection<UserPermission> Users { get; set; } = [];
+    public ICollection<UserPermission>? Users { get; set; }
 }
