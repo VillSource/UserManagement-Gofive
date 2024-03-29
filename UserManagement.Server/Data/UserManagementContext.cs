@@ -14,6 +14,11 @@ public class UserManagementContext(DbContextOptions<UserManagementContext> op) :
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<User>()
+            .HasOne(e => e.Role)
+            .WithMany(e=>e.Users)
+            .HasForeignKey(e=>e.RoleID);
+
+        modelBuilder.Entity<User>()
             .HasMany(e => e.Permissions)
             .WithOne(e => e.User)
             .HasForeignKey(e => e.UserID);

@@ -10,4 +10,6 @@ public class Role
 
     [Required]
     public string RoleName { get; set; } = string.Empty;
+
+    public ICollection<User>? Users;
 }
