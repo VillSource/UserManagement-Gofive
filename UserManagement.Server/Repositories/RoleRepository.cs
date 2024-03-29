@@ -4,14 +4,14 @@ using UserManagement.Server.Models.Entities;
 
 namespace UserManagement.Server.Repositories;
 
-public class PermissionRepository : IPermissionRepository
+public class RoleRepository : IRoleRepository
 {
     private readonly UserManagementContext _context;
 
-    public PermissionRepository(UserManagementContext context)
+    public RoleRepository(UserManagementContext context)
     {
         _context = context;
     }
 
-    public IList<Permission> AllPermissions => [.. _context.Permissions];
+    public IList<Role> AllRoles => [.. _context.Roles];
 }

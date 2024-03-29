@@ -2,7 +2,7 @@
 
 namespace UserManagement.Server.Common.Repositories;
 
-public interface IPermissionRepository
+public interface IRoleRepository
 {
-    public IList<Permission> AllPermissions { get; }
+    public IList<Role> AllRoles { get; }
 }

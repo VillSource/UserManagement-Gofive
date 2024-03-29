@@ -41,6 +41,7 @@ namespace UserManagement.Server
 
             // Add Services
             builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
+            builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 
             var app = builder.Build();
 

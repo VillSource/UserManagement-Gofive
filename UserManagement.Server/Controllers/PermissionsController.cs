@@ -20,7 +20,7 @@ public class PermissionsController : ControllerBase
     [HttpGet]
     public IActionResult Get()
     {
-        var allPermissions = _permissionRepository.AllPermission;
+        var allPermissions = _permissionRepository.AllPermissions;
         var response = new ResponseWrapper<IList<Permission>>()
         {
             Status = new()
