@@ -6,6 +6,12 @@ public class ResponseWrapper <T>
     public T? Data { get; set; }
 }
 
+
+public class ResponseWrapper : ResponseWrapper<object>
+{
+
+}
+
 public class ResponseWrapperStatus
 {
     public string Code { get; set; } = string.Empty;

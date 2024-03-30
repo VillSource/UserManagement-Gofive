@@ -6,5 +6,6 @@ public interface IUserRepository
 {
     Result<User> Add(User user, IList<UserPermission> permissions);
     Result DeleteById(string id);
+    Result<User> GetUserById(string id);
 }
 

@@ -80,4 +80,51 @@ public class UsersController : ControllerBase
 
         return Ok(response);
     }
+
+    [HttpGet("{id}")]
+    public IActionResult GetUserByID (string id)
+    {
+        var userResult = _userRepository.GetUserById(id);
+
+        if (userResult.IsSeccess)
+        {
+            var user = userResult.Data;
+            var data = new
+            {
+                user.UserID,
+                user.FirstName,
+                user.LastName,
+                user.Email,
+                user.Phone,
+                user.Role,
+                user.Username,
+                Permissions = user.Permissions
+                    .Select(i => new
+                    {
+                         i.Permission.PermissionId,
+                         i.Permission.PermissionName
+                    }),
+            };
+            return Ok(new ResponseWrapper()
+            {
+                Status = new()
+                {
+                    Code= HttpStatusCode.OK.ToString(),
+                    Description = "OK"
+                },
+                Data = data
+            });
+        }
+
+        return BadRequest(new ResponseWrapper()
+        {
+            Status = new()
+            {
+                Code = HttpStatusCode.BadRequest.ToString(),
+                Description = userResult?.Message
+                    ?? userResult?.Error?.Message
+                    ?? "Can not get user."
+            }
+        });
+    }
 }

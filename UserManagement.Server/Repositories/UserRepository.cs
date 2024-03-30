@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using UserManagement.Server.Common;
 using UserManagement.Server.Common.Repositories;
 using UserManagement.Server.Data;
@@ -75,7 +76,7 @@ public class UserRepository : IUserRepository
                 Message = $"""User id "{id}" have been delete"""
             };
         }
-        catch 
+        catch
         {
             transaction.Rollback();
             return new()
@@ -83,6 +84,38 @@ public class UserRepository : IUserRepository
                 Error = new("Can not delete")
             };
         }
+    }
+
+    public Result<User> GetUserById(string id)
+    {
+        var user = _context.UsersPeremissions
+            .Where(i => i.UserID == id)
+            .Include(i => i.Permission)
+            .Include(i => i.User)
+            .ThenInclude(i => i.Role)
+            .GroupBy(i => i.UserID)
+            .ToList();
+
+
+        if (user.IsNullOrEmpty())
+            return new() { Error = new($"User ID '{id}' is not found.") };
+
+        return new()
+        {
+            Data = user.First().Select(i => new User()
+            {
+                UserID = i.User.UserID,
+                FirstName = i.User.FirstName,
+                LastName = i.User.LastName,
+                Email = i.User.Email,
+                Phone = i.User.Phone,
+                Role = i.User.Role,
+                Username = i.User.Username,
+                Password = null,
+                Permissions = i.User.Permissions
+            }).First()
+        };
+
     }
 
     private bool IsPermissionExist(IList<UserPermission> permissions)
