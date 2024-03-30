@@ -1,4 +1,5 @@
-﻿using UserManagement.Server.Common;
+﻿using Microsoft.EntityFrameworkCore;
+using UserManagement.Server.Common;
 using UserManagement.Server.Common.Repositories;
 using UserManagement.Server.Data;
 using UserManagement.Server.Models.Entities;
@@ -49,6 +50,39 @@ public class UserRepository : IUserRepository
             .Load();
 
         return new() { Data = user };
+    }
+
+    public Result DeleteById(string id)
+    {
+        var transaction = _context.Database.BeginTransaction();
+        try
+        {
+            var deletedUser = _context.Users
+                .Where(i => i.UserID == id)
+                .ExecuteDelete();
+
+            var deletedPermission = _context.UsersPeremissions
+                .Where(i => i.UserID == id)
+                .ExecuteDelete();
+
+            if (deletedPermission + deletedUser == 0)
+                throw new Exception("Invalid user ID");
+
+            _context.SaveChanges();
+            transaction.Commit();
+            return new()
+            {
+                Message = $"""User id "{id}" have been delete"""
+            };
+        }
+        catch 
+        {
+            transaction.Rollback();
+            return new()
+            {
+                Error = new("Can not delete")
+            };
+        }
     }
 
     private bool IsPermissionExist(IList<UserPermission> permissions)
