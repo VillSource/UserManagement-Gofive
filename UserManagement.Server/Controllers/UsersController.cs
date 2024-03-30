@@ -148,7 +148,7 @@ public class UsersController : ControllerBase
             {
                 Status = new()
                 {
-                    Code= HttpStatusCode.BadRequest.ToString(),
+                    Code = HttpStatusCode.BadRequest.ToString(),
                     Description = result.Message
                         ?? result.Error?.Message
                         ?? "Can not update user."
@@ -158,4 +158,39 @@ public class UsersController : ControllerBase
 
         return GetUserByID(id);
     }
+
+    [HttpDelete("{id}")]
+    public IActionResult Delete(string id)
+    {
+        var result = _userRepository.DeleteById(id);
+
+        if (result.IsSeccess)
+        {
+            return Ok(new ResponseWrapper<object>()
+            {
+                Status = new()
+                {
+                    Code = HttpStatusCode.OK.ToString(),
+                    Description = "OK"
+                },
+                Data = new
+                {
+                    Result = result.IsSeccess,
+                    result.Message
+                }
+            });
+        }
+
+        return BadRequest(new ResponseWrapper<object>()
+        {
+            Status = new()
+            {
+                Code = HttpStatusCode.BadRequest.ToString(),
+                Description = result?.Error?.Message
+                    ?? result?.Message
+                    ?? "Can not delete"
+            }
+        });
+    }
+
 }
