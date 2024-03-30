@@ -69,7 +69,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public IActionResult GetUserByID (string id)
+    public IActionResult GetUserByID(string id)
     {
         var userResult = _userRepository.GetUserById(id);
 
@@ -88,15 +88,15 @@ public class UsersController : ControllerBase
                 Permissions = user.Permissions
                     .Select(i => new
                     {
-                         i.Permission.PermissionId,
-                         i.Permission.PermissionName
+                        i.Permission.PermissionId,
+                        i.Permission.PermissionName
                     }),
             };
             return Ok(new ResponseWrapper()
             {
                 Status = new()
                 {
-                    Code= HttpStatusCode.OK.ToString(),
+                    Code = HttpStatusCode.OK.ToString(),
                     Description = "OK"
                 },
                 Data = data
@@ -113,5 +113,49 @@ public class UsersController : ControllerBase
                     ?? "Can not get user."
             }
         });
+    }
+
+    [HttpPut("{id}")]
+    public IActionResult EditUser(string id, [FromBody] RequestEditUserDto body)
+    {
+        var user = new User
+        {
+            UserID = id,
+            FirstName = body.FirstName,
+            LastName = body.LastName,
+            Email = body.Email,
+            Phone = body.Phone,
+            RoleID = body.RoleID,
+            Password = body.Password,
+            Username = body.Username,
+        };
+
+        var permission = body.Permissions
+            .Select(i => new UserPermission()
+            {
+                UserID = id,
+                PermissionID = i.PermissionID,
+                IsReadable = i.IsReadable,
+                IsWriteable = i.IsWritable,
+                IsDeletable = i.IsDeletable,
+            }).ToList();
+
+        var result = _userRepository.EditUser(user, permission);
+
+        if (!result.IsSeccess)
+        {
+            return BadRequest(new ResponseWrapper()
+            {
+                Status = new()
+                {
+                    Code= HttpStatusCode.BadRequest.ToString(),
+                    Description = result.Message
+                        ?? result.Error?.Message
+                        ?? "Can not update user."
+                }
+            });
+        }
+
+        return GetUserByID(id);
     }
 }
