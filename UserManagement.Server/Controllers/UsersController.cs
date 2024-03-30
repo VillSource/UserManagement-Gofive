@@ -62,20 +62,7 @@ public class UsersController : ControllerBase
         }
         else
         {
-            var userDto = addResult.Data;
-            userDto.Password = null;
-            userDto.RoleID = null;
-            
-            response = new()
-            {
-                Status = new()
-                {
-                    Code = HttpStatusCode.OK.ToString(),
-                    Description = "OK"
-                },
-                Data = userDto
-            };
-
+            return GetUserByID(data.ID);
         }
 
         return Ok(response);
